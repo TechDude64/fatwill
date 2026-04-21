@@ -7,14 +7,11 @@
 body {
     overflow: hidden;
     background: #000;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
 }
 
 .image-container {
     width: 100vw;
-    height: calc(100vh - 30px); /* Adjust height to account for footer */
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,9 +37,7 @@ body {
     border: none;
     border-radius: 5px;
     z-index: 100;
-}
-
-body {
+}body {
     margin: 0;
     padding: 0;
     height: 100vh;
@@ -83,16 +78,4 @@ body::before {
 
 body.stretched-bg::before {
     transform: scaleX(2.5) scaleY(1); /* Stretch only horizontally when clicked */
-}
-
-footer {
-    color: white;
-    padding: 10px;
-    text-align: right;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: auto;
-    font-size: 14px;
-    z-index: 100;
 }
