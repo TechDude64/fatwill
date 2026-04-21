@@ -15,6 +15,7 @@ img.style.width = widths[0];
 let offsetX = 0, offsetY = 0;
 let isDragging = false;
 
+// Mouse events
 burger.addEventListener('mousedown', (e) => {
     isDragging = true;
     offsetX = e.clientX - burger.offsetLeft;
@@ -28,7 +29,28 @@ document.addEventListener('mousemove', (e) => {
     burger.style.top = (e.clientY - offsetY) + 'px';
 });
 
-document.addEventListener('mouseup', (e) => {
+document.addEventListener('mouseup', handleDrop);
+
+// Touch events
+burger.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    const touch = e.touches[0];
+    offsetX = touch.clientX - burger.offsetLeft;
+    offsetY = touch.clientY - burger.offsetTop;
+    e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    burger.style.left = (touch.clientX - offsetX) + 'px';
+    burger.style.top = (touch.clientY - offsetY) + 'px';
+    e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('touchend', handleDrop);
+
+function handleDrop(e) {
     if (!isDragging) return;
     isDragging = false;
     burger.style.cursor = 'grab';
@@ -44,6 +66,17 @@ document.addEventListener('mouseup', (e) => {
         // Stretch Will
         step = (step + 1) % (maxStep + 1);
         img.style.width = widths[step];
+        
+        // Check if game is done
+        if (step === maxStep) {
+            setTimeout(() => {
+                alert('Game Done!');
+                // Reset game
+                step = 0;
+                img.style.width = widths[0];
+            }, 500);
+        }
+        
         // Move burger to random position
         const winW = window.innerWidth - burger.width;
         const winH = window.innerHeight - burger.height;
@@ -52,4 +85,4 @@ document.addEventListener('mouseup', (e) => {
         burger.style.left = randX + 'px';
         burger.style.top = randY + 'px';
     }
-});
+}
