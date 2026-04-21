@@ -70,7 +70,7 @@ function handleDrop(e) {
         // Check if game is done
         if (step === maxStep) {
             setTimeout(() => {
-                alert('Game Done!');
+                alert('Fully Fattend!');
                 // Reset game
                 step = 0;
                 img.style.width = widths[0];
