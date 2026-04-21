@@ -1,6 +1,8 @@
 const img = document.getElementById('fatWill');
 const burger = document.getElementById('burger');
 const mouthZone = document.getElementById('mouthZone');
+const winPopup = document.getElementById('winPopup');
+const playAgainBtn = document.getElementById('playAgainBtn');
 
 // Prevent native drag on both images
 burger.addEventListener('dragstart', e => e.preventDefault());
@@ -10,6 +12,13 @@ let step = 0;
 const maxStep = 5;
 const widths = ['40vw', '52vw', '64vw', '76vw', '88vw', '100vw'];
 img.style.width = widths[0];
+
+// Play Again Button
+playAgainBtn.addEventListener('click', () => {
+    winPopup.style.display = 'none';
+    step = 0;
+    img.style.width = widths[0];
+});
 
 // Drag state
 let offsetX = 0, offsetY = 0;
@@ -70,10 +79,7 @@ function handleDrop(e) {
         // Check if game is done
         if (step === maxStep) {
             setTimeout(() => {
-                alert('Fully Fattend!');
-                // Reset game
-                step = 0;
-                img.style.width = widths[0];
+                winPopup.style.display = 'flex';
             }, 500);
         }
         
