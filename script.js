@@ -2,8 +2,9 @@ const img = document.getElementById('fatWill');
 const burger = document.getElementById('burger');
 const mouthZone = document.getElementById('mouthZone');
 
-// Prevent native drag
+// Prevent native drag on both images
 burger.addEventListener('dragstart', e => e.preventDefault());
+img.addEventListener('dragstart', e => e.preventDefault());
 
 let step = 0;
 const maxStep = 5;
