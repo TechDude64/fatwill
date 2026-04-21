@@ -1,0 +1,12 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-image: url('will.jpg');
+    background-size: 100% 100%; /* Stretches the image to fill the entire screen */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* ... existing code ... */
