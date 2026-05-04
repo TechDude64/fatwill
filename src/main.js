@@ -377,11 +377,7 @@ async function handleAuthSubmit(e) {
             throw result.error;
         }
 
-        if (isSignUp && result.data.user && !result.data.session) {
-            authError.textContent = 'Check your email for the confirmation link!';
-            authError.style.color = 'green';
-            authError.style.display = 'block';
-        } else if (isSignUp && result.data.user) {
+        if (isSignUp) {
             // Create profile with username after successful sign-up
             const { error: profileError } = await supabase
                 .from('profiles')
@@ -391,15 +387,11 @@ async function handleAuthSubmit(e) {
                 console.error('Error creating profile:', profileError);
                 // Don't throw here as auth was successful, just log the error
             }
-
-            currentUser = result.data.user;
-            updateAuthUI();
-            hideAuthPopup();
-        } else {
-            currentUser = result.data.user;
-            updateAuthUI();
-            hideAuthPopup();
         }
+
+        currentUser = result.data.user;
+        updateAuthUI();
+        hideAuthPopup();
     } catch (error) {
         authError.textContent = error.message;
         authError.style.display = 'block';
