@@ -153,10 +153,16 @@ function hideWinPopup() {
         step = 0;
         img.style.width = widths[0];
         timerDisplay.textContent = "00:00.000";
+        burger.style.left = '140px';
+        burger.style.top = '20px';
     }, 300);
 }
 
 function submitScore(timeString) {
+    if (!supabase) {
+        console.error('Supabase not loaded');
+        return;
+    }
     // Parse time string "MM:SS.mmm" to milliseconds
     const parts = timeString.split(':');
     const minutes = parseInt(parts[0]);
@@ -196,6 +202,10 @@ function hideLeaderboard() {
 }
 
 async function fetchLeaderboard() {
+    if (!supabase) {
+        leaderboardList.innerHTML = '<p>Leaderboard unavailable</p>';
+        return;
+    }
     const { data, error } = await supabase
         .from('leaderboard')
         .select('time_ms, created_at')
