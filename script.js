@@ -5,6 +5,15 @@ const winPopup = document.getElementById('winPopup');
 const playAgainBtn = document.getElementById('playAgainBtn');
 const timerDisplay = document.getElementById('timerDisplay');
 const finalTimeDisplay = document.getElementById('finalTimeDisplay');
+const leaderboardBtn = document.getElementById('leaderboardBtn');
+const leaderboardPopup = document.getElementById('leaderboardPopup');
+const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
+const leaderboardList = document.getElementById('leaderboardList');
+
+// Supabase setup
+const supabaseUrl = 'https://umocrvwffkxiusdxsgjs.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtb2NydndmZmt4aXVzZHhzZ2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3ODkyNjksImV4cCI6MjA5MjM2NTI2OX0.hcwj6jyT9d_CHtv9EiLlQUgNyiFdFtNnFqrvRSQhRhU';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // Prevent native drag on both images
 burger.addEventListener('dragstart', e => e.preventDefault());
@@ -125,11 +134,15 @@ function handleDrop(e) {
 }
 
 function showWinPopup() {
-    finalTimeDisplay.textContent = `Time: ${timerDisplay.textContent}`;
+    const finalTime = timerDisplay.textContent;
+    finalTimeDisplay.textContent = `Time: ${finalTime}`;
     winPopup.style.display = 'flex';
     // Trigger reflow
     void winPopup.offsetWidth;
     winPopup.classList.add('show');
+
+    // Submit score to leaderboard
+    submitScore(finalTime);
 }
 
 function hideWinPopup() {
@@ -143,4 +156,65 @@ function hideWinPopup() {
     }, 300);
 }
 
+function submitScore(timeString) {
+    // Parse time string "MM:SS.mmm" to milliseconds
+    const parts = timeString.split(':');
+    const minutes = parseInt(parts[0]);
+    const secondsParts = parts[1].split('.');
+    const seconds = parseInt(secondsParts[0]);
+    const milliseconds = parseInt(secondsParts[1]);
+    const totalMs = minutes * 60000 + seconds * 1000 + milliseconds;
+
+    supabase
+        .from('leaderboard')
+        .insert([{ time_ms: totalMs }])
+        .then(({ data, error }) => {
+            if (error) {
+                console.error('Error submitting score:', error);
+            } else {
+                console.log('Score submitted:', data);
+            }
+        });
+}
+
 playAgainBtn.addEventListener('click', hideWinPopup);
+leaderboardBtn.addEventListener('click', showLeaderboard);
+closeLeaderboardBtn.addEventListener('click', hideLeaderboard);
+
+function showLeaderboard() {
+    fetchLeaderboard();
+    leaderboardPopup.style.display = 'flex';
+    void leaderboardPopup.offsetWidth;
+    leaderboardPopup.classList.add('show');
+}
+
+function hideLeaderboard() {
+    leaderboardPopup.classList.remove('show');
+    setTimeout(() => {
+        leaderboardPopup.style.display = 'none';
+    }, 300);
+}
+
+async function fetchLeaderboard() {
+    const { data, error } = await supabase
+        .from('leaderboard')
+        .select('time_ms, created_at')
+        .order('time_ms', { ascending: true })
+        .limit(10);
+
+    if (error) {
+        console.error('Error fetching leaderboard:', error);
+        leaderboardList.innerHTML = '<p>Error loading leaderboard</p>';
+        return;
+    }
+
+    leaderboardList.innerHTML = '';
+    data.forEach((entry, index) => {
+        const li = document.createElement('div');
+        li.style.marginBottom = '10px';
+        li.style.padding = '5px';
+        li.style.borderBottom = '1px solid #ccc';
+        li.innerHTML = `<strong>${index + 1}.</strong> ${formatTime(entry.time_ms)} <small>(${new Date(entry.created_at).toLocaleDateString()})</small>`;
+        leaderboardList.appendChild(li);
+    });
+}
