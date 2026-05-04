@@ -14,6 +14,11 @@
         </div>
     </div>
     <div id="timerDisplay" style="position:absolute;top:20px;right:20px;color:white;font-family:monospace;font-size:32px;font-weight:bold;z-index:4;text-shadow: 2px 2px 4px rgba(0,0,0,1);">00:00.000</div>
+    <div id="authStatus" style="position:absolute;top:20px;left:50%;transform:translateX(-50%);color:white;font-size:16px;z-index:4;text-shadow: 2px 2px 4px rgba(0,0,0,1);">
+        <span id="userInfo">Not signed in</span>
+        <button id="signInBtn" style="margin-left:10px;padding:5px 10px;font-size:14px;cursor:pointer;background:#fff;border:none;border-radius:3px;">Sign In</button>
+        <button id="signOutBtn" style="margin-left:10px;padding:5px 10px;font-size:14px;cursor:pointer;background:#fff;border:none;border-radius:3px;display:none;">Sign Out</button>
+    </div>
     <button id="leaderboardBtn" style="position:absolute;top:20px;left:20px;padding:10px 20px;font-size:16px;cursor:pointer;background:#fff;border:none;border-radius:5px;z-index:4;">Leaderboard</button>
     <img id="burger" src="burger.png" alt="Stretch" style="width:96px;height:96px;position:absolute;left:140px;top:20px;z-index:3;cursor:grab;user-drag:none;user-select:none;">
     <div id="winPopup" class="popup-overlay" style="display: none;">
@@ -28,6 +33,20 @@
             <h2>Worldwide Leaderboard</h2>
             <div id="leaderboardList" style="max-height:300px;overflow-y:auto;margin-bottom:20px;"></div>
             <button id="closeLeaderboardBtn">Close</button>
+        </div>
+    </div>
+    <div id="authPopup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <h2 id="authTitle">Sign In</h2>
+            <form id="authForm">
+                <input type="email" id="emailInput" placeholder="Email" required style="width:100%;padding:10px;margin:10px 0;border:1px solid #ccc;border-radius:4px;">
+                <input type="text" id="usernameInput" placeholder="Username" style="width:100%;padding:10px;margin:10px 0;border:1px solid #ccc;border-radius:4px;display:none;">
+                <input type="password" id="passwordInput" placeholder="Password" required style="width:100%;padding:10px;margin:10px 0;border:1px solid #ccc;border-radius:4px;">
+                <button type="submit" id="authSubmitBtn" style="width:100%;padding:10px;margin:10px 0;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;">Sign In</button>
+            </form>
+            <p id="authToggle" style="text-align:center;margin:10px 0;cursor:pointer;color:#007bff;">Don't have an account? Sign Up</p>
+            <button id="closeAuthBtn" style="width:100%;padding:10px;margin:10px 0;background:#6c757d;color:white;border:none;border-radius:4px;cursor:pointer;">Cancel</button>
+            <div id="authError" style="color:red;text-align:center;margin-top:10px;display:none;"></div>
         </div>
     </div>
     <script type="module" src="/src/main.js"></script>

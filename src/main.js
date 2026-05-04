@@ -11,11 +11,29 @@ const leaderboardBtn = document.getElementById('leaderboardBtn');
 const leaderboardPopup = document.getElementById('leaderboardPopup');
 const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
 const leaderboardList = document.getElementById('leaderboardList');
+const authStatus = document.getElementById('authStatus');
+const userInfo = document.getElementById('userInfo');
+const signInBtn = document.getElementById('signInBtn');
+const signOutBtn = document.getElementById('signOutBtn');
+const authPopup = document.getElementById('authPopup');
+const authTitle = document.getElementById('authTitle');
+const authForm = document.getElementById('authForm');
+const emailInput = document.getElementById('emailInput');
+const usernameInput = document.getElementById('usernameInput');
+const passwordInput = document.getElementById('passwordInput');
+const authSubmitBtn = document.getElementById('authSubmitBtn');
+const authToggle = document.getElementById('authToggle');
+const closeAuthBtn = document.getElementById('closeAuthBtn');
+const authError = document.getElementById('authError');
 
 // Supabase setup
 const supabaseUrl = 'https://umocrvwffkxiusdxsgjs.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtb2NydndmZmt4aXVzZHhzZ2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3ODkyNjksImV4cCI6MjA5MjM2NTI2OX0.hcwj6jyT9d_CHtv9EiLlQUgNyiFdFtNnFqrvRSQhRhU';
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Auth state
+let currentUser = null;
+let isSignUp = false;
 
 // Prevent native drag on both images
 burger.addEventListener('dragstart', e => e.preventDefault());
@@ -160,11 +178,17 @@ function hideWinPopup() {
     }, 300);
 }
 
-function submitScore(timeString) {
+async function submitScore(timeString) {
     if (!supabase) {
         console.error('Supabase not loaded');
         return;
     }
+    if (!currentUser) {
+        alert('Please sign in to save your score!');
+        showAuthPopup(false);
+        return;
+    }
+
     // Parse time string "MM:SS.mmm" to milliseconds
     const parts = timeString.split(':');
     const minutes = parseInt(parts[0]);
@@ -173,21 +197,55 @@ function submitScore(timeString) {
     const milliseconds = parseInt(secondsParts[1]);
     const totalMs = minutes * 60000 + seconds * 1000 + milliseconds;
 
-    supabase
-        .from('leaderboard')
-        .insert([{ time_ms: totalMs }])
-        .then(({ data, error }) => {
-            if (error) {
-                console.error('Error submitting score:', error);
-            } else {
-                console.log('Score submitted:', data);
-            }
-        });
+    try {
+        // Check if user has a profile (meaning they signed up with username)
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', currentUser.id)
+            .single();
+
+        if (profileError && profileError.code === 'PGRST116') { // Profile not found
+            alert('Please sign up again to set a username before submitting scores!');
+            handleSignOut(); // Sign them out so they can sign up properly
+            return;
+        } else if (profileError) {
+            console.error('Error checking profile:', profileError);
+            return;
+        }
+
+        // User has a profile with username from signup, submit the score
+        const { data, error } = await supabase
+            .from('leaderboard')
+            .insert([{ time_ms: totalMs, profile_id: currentUser.id }]);
+
+        if (error) {
+            console.error('Error submitting score:', error);
+        } else {
+            console.log('Score submitted:', data);
+        }
+    } catch (error) {
+        console.error('Error in submitScore:', error);
+    }
 }
 
 playAgainBtn.addEventListener('click', hideWinPopup);
-leaderboardBtn.addEventListener('click', showLeaderboard);
+leaderboardBtn.addEventListener('click', () => {
+    showLeaderboard();
+    closeHamburgerMenu();
+});
 closeLeaderboardBtn.addEventListener('click', hideLeaderboard);
+signInBtn.addEventListener('click', () => {
+    showAuthPopup(false);
+    closeHamburgerMenu();
+});
+signOutBtn.addEventListener('click', () => {
+    handleSignOut();
+    closeHamburgerMenu();
+});
+authForm.addEventListener('submit', handleAuthSubmit);
+authToggle.addEventListener('click', () => showAuthPopup(!isSignUp));
+closeAuthBtn.addEventListener('click', hideAuthPopup);
 
 function showLeaderboard() {
     fetchLeaderboard();
@@ -210,7 +268,11 @@ async function fetchLeaderboard() {
     }
     const { data, error } = await supabase
         .from('leaderboard')
-        .select('time_ms, created_at')
+        .select(`
+            time_ms,
+            created_at,
+            profiles!profile_id(username)
+        `)
         .order('time_ms', { ascending: true })
         .limit(10);
 
@@ -226,7 +288,135 @@ async function fetchLeaderboard() {
         li.style.marginBottom = '10px';
         li.style.padding = '5px';
         li.style.borderBottom = '1px solid #ccc';
-        li.innerHTML = `<strong>${index + 1}.</strong> ${formatTime(entry.time_ms)} <small>(${new Date(entry.created_at).toLocaleDateString()})</small>`;
+        const userDisplay = entry.profiles?.username || 'Anonymous';
+        li.innerHTML = `<strong>${index + 1}.</strong> ${formatTime(entry.time_ms)} - ${userDisplay} <small>(${new Date(entry.created_at).toLocaleDateString()})</small>`;
         leaderboardList.appendChild(li);
     });
 }
+
+// Authentication functions
+async function initializeAuth() {
+    const { data: { user } } = await supabase.auth.getUser();
+    currentUser = user;
+    updateAuthUI();
+}
+
+async function updateAuthUI() {
+    if (currentUser) {
+        // Fetch username from profiles table
+        const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', currentUser.id)
+            .single();
+
+        const displayName = profile?.username || currentUser.email;
+        userInfo.textContent = `Welcome, ${displayName}`;
+        signInBtn.style.display = 'none';
+        signOutBtn.style.display = 'inline-block';
+    } else {
+        userInfo.textContent = 'Not signed in';
+        signInBtn.style.display = 'inline-block';
+        signOutBtn.style.display = 'none';
+    }
+}
+
+function showAuthPopup(signUp = false) {
+    isSignUp = signUp;
+    authTitle.textContent = signUp ? 'Sign Up' : 'Sign In';
+    authSubmitBtn.textContent = signUp ? 'Sign Up' : 'Sign In';
+    authToggle.textContent = signUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up";
+    authError.style.display = 'none';
+    authForm.reset();
+    
+    // Show/hide username field
+    usernameInput.style.display = signUp ? 'block' : 'none';
+    usernameInput.required = signUp;
+    
+    authPopup.style.display = 'flex';
+    void authPopup.offsetWidth;
+    authPopup.classList.add('show');
+}
+
+function hideAuthPopup() {
+    authPopup.classList.remove('show');
+    setTimeout(() => {
+        authPopup.style.display = 'none';
+    }, 300);
+}
+
+async function handleAuthSubmit(e) {
+    e.preventDefault();
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const username = usernameInput.value;
+
+    try {
+        let result;
+        if (isSignUp) {
+            // Validate username for sign-up
+            if (!username.trim()) {
+                throw new Error('Username is required');
+            }
+            if (username.length < 3) {
+                throw new Error('Username must be at least 3 characters long');
+            }
+
+            result = await supabase.auth.signUp({
+                email,
+                password,
+            });
+        } else {
+            result = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+        }
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        if (isSignUp && result.data.user && !result.data.session) {
+            authError.textContent = 'Check your email for the confirmation link!';
+            authError.style.color = 'green';
+            authError.style.display = 'block';
+        } else if (isSignUp && result.data.user) {
+            // Create profile with username after successful sign-up
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .insert([{ id: result.data.user.id, username: username.trim() }]);
+
+            if (profileError) {
+                console.error('Error creating profile:', profileError);
+                // Don't throw here as auth was successful, just log the error
+            }
+
+            currentUser = result.data.user;
+            updateAuthUI();
+            hideAuthPopup();
+        } else {
+            currentUser = result.data.user;
+            updateAuthUI();
+            hideAuthPopup();
+        }
+    } catch (error) {
+        authError.textContent = error.message;
+        authError.style.display = 'block';
+    }
+}
+
+async function handleSignOut() {
+    await supabase.auth.signOut();
+    currentUser = null;
+    updateAuthUI();
+}
+
+// Initialize auth on app start
+initializeAuth();
+
+// Listen for auth state changes
+supabase.auth.onAuthStateChange((event, session) => {
+    currentUser = session?.user || null;
+    updateAuthUI();
+});

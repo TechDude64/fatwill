@@ -8,7 +8,11 @@ const finalTimeDisplay = document.getElementById('finalTimeDisplay');
 const leaderboardBtn = document.getElementById('leaderboardBtn');
 const leaderboardPopup = document.getElementById('leaderboardPopup');
 const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
-const leaderboardList = document.getElementById('leaderboardList');
+const winLeaderboardBtn = document.getElementById('winLeaderboardBtn');
+
+// Hamburger menu elements
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const menuDropdown = document.getElementById('menuDropdown');
 
 // Supabase setup
 const supabaseUrl = 'https://umocrvwffkxiusdxsgjs.supabase.co';
@@ -184,8 +188,44 @@ function submitScore(timeString) {
 }
 
 playAgainBtn.addEventListener('click', hideWinPopup);
-leaderboardBtn.addEventListener('click', showLeaderboard);
+winLeaderboardBtn.addEventListener('click', () => {
+    hideWinPopup();
+    showLeaderboard();
+});
+leaderboardBtn.addEventListener('click', () => {
+    showLeaderboard();
+    closeHamburgerMenu();
+});
 closeLeaderboardBtn.addEventListener('click', hideLeaderboard);
+
+// Hamburger menu functionality
+hamburgerBtn.addEventListener('click', toggleHamburgerMenu);
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!hamburgerBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+        closeHamburgerMenu();
+    }
+});
+
+function toggleHamburgerMenu() {
+    const isOpen = menuDropdown.classList.contains('show');
+    if (isOpen) {
+        closeHamburgerMenu();
+    } else {
+        openHamburgerMenu();
+    }
+}
+
+function openHamburgerMenu() {
+    menuDropdown.classList.add('show');
+    hamburgerBtn.classList.add('active');
+}
+
+function closeHamburgerMenu() {
+    menuDropdown.classList.remove('show');
+    hamburgerBtn.classList.remove('active');
+}
 
 function showLeaderboard() {
     fetchLeaderboard();
