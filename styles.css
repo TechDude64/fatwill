@@ -87,49 +87,52 @@ body.stretched-bg::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.popup-overlay.show {
+    opacity: 1;
 }
 
 .popup-content {
     background: #fff;
-    padding: 40px;
-    border-radius: 15px;
+    padding: 30px;
+    border-radius: 10px;
     text-align: center;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    color: #333;
+    font-family: sans-serif;
+}
+
+.popup-overlay.show .popup-content {
+    transform: scale(1);
 }
 
 .popup-content h2 {
     margin-bottom: 20px;
     font-size: 2em;
-    color: #333;
-    font-family: Arial, sans-serif;
+    color: #ff5722;
 }
 
-#playAgainBtn {
-    padding: 15px 30px;
+.popup-content button {
+    padding: 10px 20px;
     font-size: 1.2em;
-    background: #4CAF50;
+    background: #ff5722;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
+    transition: background 0.2s;
 }
 
-#playAgainBtn:hover {
-    background: #45a049;
-}
-
-#playAgainBtn:active {
-    transform: scale(0.95);
-}
-
-@keyframes popIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+.popup-content button:hover {
+    background: #e64a19;
 }

@@ -13,10 +13,12 @@
             <div style="width:150px;height:150px;border-radius:50%;opacity:0.6;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);"></div>
         </div>
     </div>
+    <div id="timerDisplay" style="position:absolute;top:20px;right:20px;color:white;font-family:monospace;font-size:32px;font-weight:bold;z-index:4;text-shadow: 2px 2px 4px rgba(0,0,0,1);">00:00.000</div>
     <img id="burger" src="burger.png" alt="Stretch" style="width:96px;height:96px;position:absolute;left:20px;top:20px;z-index:3;cursor:grab;user-drag:none;user-select:none;">
-    <div id="winPopup" class="popup-overlay" style="display:none;">
+    <div id="winPopup" class="popup-overlay" style="display: none;">
         <div class="popup-content">
-            <h2>Fully Fattend!</h2>
+            <h2>Fully Fattened!</h2>
+            <p id="finalTimeDisplay" style="font-size:1.5em;margin-bottom:20px;font-family:monospace;color:#333;"></p>
             <button id="playAgainBtn">Play Again</button>
         </div>
     </div>
