@@ -135,21 +135,22 @@ function handleDrop(e) {
         step = (step + 1) % (maxStep + 1);
         img.style.width = widths[step];
         
-                // Check if game is done
+                                // Check if game is done
                 if (step === maxStep) {
                     stopTimer();
+                    burger.style.display = 'none';
                     setTimeout(() => {
                         showWinPopup();
                     }, 500);
+                } else {
+                    // Move burger to random position
+                    const winW = window.innerWidth - burger.width;
+                    const winH = window.innerHeight - burger.height;
+                    const randX = Math.random() * winW;
+                    const randY = Math.random() * winH;
+                    burger.style.left = randX + 'px';
+                    burger.style.top = randY + 'px';
                 }
-        
-        // Move burger to random position
-        const winW = window.innerWidth - burger.width;
-        const winH = window.innerHeight - burger.height;
-        const randX = Math.random() * winW;
-        const randY = Math.random() * winH;
-        burger.style.left = randX + 'px';
-        burger.style.top = randY + 'px';
     }
 }
 
@@ -175,6 +176,7 @@ function hideWinPopup() {
         timerDisplay.textContent = "00:00.000";
         burger.style.left = '140px';
         burger.style.top = '20px';
+        burger.style.display = '';
     }, 300);
 }
 

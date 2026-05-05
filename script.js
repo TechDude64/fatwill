@@ -122,9 +122,9 @@ function handleDrop(e) {
                 // Check if game is done
                 if (step === maxStep) {
                     stopTimer();
-                    setTimeout(() => {
-                        showWinPopup();
-                    }, 500);
+                
+                    showWinPopup();
+                
                 }
         
         // Move burger to random position
