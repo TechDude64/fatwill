@@ -303,6 +303,21 @@ async function fetchLeaderboard() {
         leaderboardList.innerHTML = '<p>Leaderboard unavailable</p>';
         return;
     }
+    
+    // Fetch total count of games played
+    const { count, error: countError } = await supabase
+        .from('leaderboard')
+        .select('*', { count: 'exact', head: true });
+        
+    const totalGamesPlayedSpan = document.getElementById('totalGamesPlayed');
+    if (totalGamesPlayedSpan) {
+        if (!countError) {
+            totalGamesPlayedSpan.textContent = `(${count * 5} burgers fed)`;
+        } else {
+            totalGamesPlayedSpan.textContent = '';
+        }
+    }
+
     const { data, error } = await supabase
         .from('leaderboard')
         .select(`
