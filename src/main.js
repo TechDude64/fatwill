@@ -53,6 +53,21 @@ let startTime = 0;
 let timerInterval = null;
 let isTimerRunning = false;
 
+
+function getLocation() {
+    if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition((position) => {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    console.log(`Latitude: ${lat}, Longitude: ${lon}`);
+  }, (error) => {
+    console.error("Error Code: " + error.code + " - " + error.message);
+  });
+} else {
+  console.log("Geolocation is not supported by this browser.");
+}
+return lat, lon;
+}
 function formatTime(ms) {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
@@ -201,7 +216,7 @@ async function submitScore(timeString) {
         const isMouthHeightValid = mouthZone.style.height === '3.7vh';
 
     if (!isBurgerWidthValid || !isMouthWidthValid || !isMouthHeightValid) {
-        alert('Cheating detected! Game files were modified.');
+        alert('Cheating detected! Game files were modified. Your IP Address and Location have been recorded \n Your score will not be submitted.');
         return;
     }
 
