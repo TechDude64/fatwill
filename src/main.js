@@ -185,6 +185,26 @@ async function submitScore(timeString) {
         console.error('Supabase not loaded');
         return;
     }
+
+    // Anti-cheat: Check if burger or mouthZone sizes were altered from expected values
+    const expectedBurgerStyle = "width: 8.5%; height: auto; position: absolute; z-index: 3; cursor: grab; user-drag: none; user-select: none;".replace(/\s+/g, '');
+    const currentBurgerStyle = burger.getAttribute('style').replace(/left:\s*[^;]+;|top:\s*[^;]+;|display:\s*[^;]+;/g, '').replace(/\s+/g, '');
+    
+    const expectedMouthStyle = "position:absolute;left:50%;top:40%;width:80px;height:40px;transform:translate(-50%,-50%);z-index:2;".replace(/\s+/g, '');
+    const currentMouthStyle = mouthZone.getAttribute('style').replace(/\s+/g, '');
+    
+    // We check against the current expected styles, if they don't match, we block the score
+    // Since styles can be slightly varied by the browser, we check the specific width properties instead
+    
+    const isBurgerWidthValid = burger.style.width === '8.5%';
+        const isMouthWidthValid = mouthZone.style.width === '4.16vw';
+        const isMouthHeightValid = mouthZone.style.height === '3.7vh';
+
+    if (!isBurgerWidthValid || !isMouthWidthValid || !isMouthHeightValid) {
+        alert('Cheating detected! Game files were modified.');
+        return;
+    }
+
     if (!currentUser) {
         alert('Please sign in to save your score!');
         showAuthPopup(false);
