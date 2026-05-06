@@ -304,7 +304,6 @@ async function fetchLeaderboard() {
         return;
     }
     
-    // Fetch total count of games played
     const { count, error: countError } = await supabase
         .from('leaderboard')
         .select('*', { count: 'exact', head: true });
@@ -312,7 +311,7 @@ async function fetchLeaderboard() {
     const totalGamesPlayedSpan = document.getElementById('totalGamesPlayed');
     if (totalGamesPlayedSpan) {
         if (!countError) {
-            totalGamesPlayedSpan.textContent = `(${count * 5} burgers fed)`;
+            totalGamesPlayedSpan.textContent = `(${count * 5} burgers fed  ${count * 5 * 261} calories consumed)`;
         } else {
             totalGamesPlayedSpan.textContent = '';
         }
@@ -411,7 +410,7 @@ async function handleAuthSubmit(e) {
                 throw new Error('Username is required');
             }
             if (username.length < 3) {
-                throw new Error('Username must be at least 3 characters long');
+                throw new Error('Username must be at least 3 characters long you egg');
             }
 
             result = await supabase.auth.signUp({
@@ -430,14 +429,12 @@ async function handleAuthSubmit(e) {
         }
 
         if (isSignUp) {
-            // Create profile with username after successful sign-up
             const { error: profileError } = await supabase
                 .from('profiles')
                 .insert([{ id: result.data.user.id, username: username.trim() }]);
 
             if (profileError) {
                 console.error('Error creating profile:', profileError);
-                // Don't throw here as auth was successful, just log the error
             }
         }
 
