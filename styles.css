@@ -5,44 +5,15 @@
 }
 
 body {
-    overflow: hidden;
-    background: #000;
-}
-
-.image-container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-#fatWill {
-    height: 100vh;
-    width: auto;
-    max-width: none;
-    transition: width 0.3s ease;
-}
-
-#stretchBtn {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 15px 30px;
-    font-size: 18px;
-    cursor: pointer;
-    background: #fff;
-    border: none;
-    border-radius: 5px;
-    z-index: 100;
-}body {
     margin: 0;
     padding: 0;
     height: 100vh;
     overflow: hidden;
     position: relative;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at top, rgba(35, 69, 142, 0.8), transparent 28%),
+                linear-gradient(180deg, #0f162b 0%, #050810 100%);
+    color: #f5f5f5;
 }
 
 body::before {
@@ -52,42 +23,132 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 50%);
     transition: transform 0.5s ease;
+    pointer-events: none;
     z-index: -1;
 }
 
-#stretchButton {
+body.stretched-bg::before {
+    transform: scaleX(2.5) scaleY(1);
+}
+
+.image-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+#fatWill {
+    height: 100vh;
+    width: auto;
+    max-width: none;
+    transition: width 0.3s ease;
+    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.08));
+}
+
+#burger {
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.35));
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#burger:active {
+    transform: scale(0.98);
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    padding: 10px 16px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+
+button:hover,
+button:focus {
+    transform: translateY(-1px);
+    outline: none;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+#timerDisplay,
+#authStatus,
+#leaderboardBtn {
+    z-index: 4;
+}
+
+#timerDisplay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #ffffff;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
+}
+
+#authStatus {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(12, 20, 45, 0.72);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+#authStatus button {
+    margin-left: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #111;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+}
+
+#authStatus button:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+#leaderboardBtn {
     position: absolute;
     top: 20px;
     left: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1000;
-    transition: background-color 0.3s;
+    padding: 10px 18px;
+    font-size: 15px;
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
 }
 
-#stretchButton:hover {
-    background-color: rgba(50, 50, 50, 0.9);
+#leaderboardBtn:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
-body.stretched-bg::before {
-    transform: scaleX(2.5) scaleY(1); /* Stretch only horizontally when clicked */
+#leaderboardBtn:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
-/* Custom Win Popup Styles */
 .popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.75);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,15 +162,15 @@ body.stretched-bg::before {
 }
 
 .popup-content {
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
+    width: min(90vw, 500px);
+    background: rgba(250, 250, 250, 0.96);
+    padding: 32px 28px;
+    border-radius: 18px;
     text-align: center;
-    transform: scale(0.8);
+    transform: scale(0.88);
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    color: #333;
-    font-family: sans-serif;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    color: #1d1d1d;
 }
 
 .popup-overlay.show .popup-content {
@@ -118,21 +179,116 @@ body.stretched-bg::before {
 
 .popup-content h2 {
     margin-bottom: 20px;
-    font-size: 2em;
+    font-size: clamp(1.8rem, 2.3vw, 2.4rem);
     color: #ff5722;
+}
+#totalGamesPlayed {
+    margin: 0 0 22px;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+.popup-content p {
+    margin-bottom: 24px;
+    color: #333;
+    font-size: 1rem;
 }
 
 .popup-content button {
-    padding: 10px 20px;
-    font-size: 1.2em;
+    padding: 12px 24px;
+    font-size: 1rem;
     background: #ff5722;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 999px;
     cursor: pointer;
-    transition: background 0.2s;
+    box-shadow: 0 10px 20px rgba(255, 87, 34, 0.3);
 }
 
 .popup-content button:hover {
     background: #e64a19;
+}
+
+#leaderboardList {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: rgba(245, 245, 245, 0.9);
+    border-radius: 12px;
+    text-align: left;
+}
+
+#leaderboardList div {
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+#leaderboardList div:last-child {
+    margin-bottom: 0;
+}
+
+#authForm input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 10px 0;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #f9f9f9;
+}
+
+#authForm input:focus {
+    border-color: #ff5722;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.12);
+}
+
+#authSubmitBtn,
+#closeAuthBtn {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 10px 0;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+}
+
+#authSubmitBtn {
+    background: #007bff;
+    color: white;
+}
+
+#authSubmitBtn:hover {
+    background: #0066d6;
+}
+
+#closeAuthBtn {
+    background: #6c757d;
+    color: white;
+}
+
+#closeAuthBtn:hover {
+    background: #585f65;
+}
+
+#authToggle {
+    text-align: center;
+    margin: 10px 0;
+    cursor: pointer;
+    color: #007bff;
+}
+
+#authToggle:hover {
+    color: #0056b3;
+}
+
+#authError {
+    color: #d32f2f;
+    text-align: center;
+    margin-top: 10px;
 }
