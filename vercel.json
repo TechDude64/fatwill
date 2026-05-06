@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination":   "https://youtu.be/dQw4w9WgXcQ?si=NQnlqFwu9IyTEVlD",
+      "permanent": true
+    }
+  ]
+}
