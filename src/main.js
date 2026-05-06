@@ -307,11 +307,31 @@ async function fetchLeaderboard() {
     const { count, error: countError } = await supabase
         .from('leaderboard')
         .select('*', { count: 'exact', head: true });
+
+    const { profilesCount, error: profilesError } = await supabase
+        .from('profiles') 
+        .select('*', { count: 'exact', head: true });
+
+        //Stats
+        let totalPlayers = profilesCount;
+        let gamesPlayed = count;
+        let totalCost = count * 5 * 8.70;
+        let roundedCost = totalCost.toFixed(2);
+        let totalBurgers = count * 5;
+        let totalGigaCalories = totalBurgers * 621 / 1000000;
+        let totalCows = totalBurgers * 9 / 20000;
+        let roundedCows = totalCows.toFixed(2);
+        let tonnesOfBurgers = totalBurgers * 233 / 1000000;
+        let grainsOfWheat = totalBurgers * 1600;
+        let megalitersOfWater = totalBurgers * 275 / 100000;
+
+
         
+
     const totalGamesPlayedSpan = document.getElementById('totalGamesPlayed');
     if (totalGamesPlayedSpan) {
         if (!countError) {
-            totalGamesPlayedSpan.textContent = `(${count * 5} burgers fed  ${count * 5 * 621} calories consumed)`;
+                totalGamesPlayedSpan.textContent = `(${totalBurgers} Burgers Fed,  ${totalGigaCalories.toFixed(2)} Gigacalories Consumed, ${roundedCows} Cows Slaughtered, $${roundedCost} Cost to Buy Big Macs)`;
         } else {
             totalGamesPlayedSpan.textContent = ''
         }
