@@ -311,9 +311,9 @@ async function fetchLeaderboard() {
     const totalGamesPlayedSpan = document.getElementById('totalGamesPlayed');
     if (totalGamesPlayedSpan) {
         if (!countError) {
-            totalGamesPlayedSpan.textContent = `(${count * 5} burgers fed  ${count * 5 * 261} calories consumed)`;
+            totalGamesPlayedSpan.textContent = `(${count * 5} burgers fed  ${count * 5 * 621} calories consumed)`;
         } else {
-            totalGamesPlayedSpan.textContent = '';
+            totalGamesPlayedSpan.textContent = ''
         }
     }
 
@@ -327,7 +327,7 @@ async function fetchLeaderboard() {
         .order('time_ms', { ascending: true })
         .limit(10);
 
-    if (error) {
+        if (error) {
         console.error('Error fetching leaderboard:', error);
         leaderboardList.innerHTML = '<p>Error loading leaderboard</p>';
         return;
@@ -336,11 +336,19 @@ async function fetchLeaderboard() {
     leaderboardList.innerHTML = '';
     data.forEach((entry, index) => {
         const li = document.createElement('div');
-        li.style.marginBottom = '10px';
-        li.style.padding = '5px';
-        li.style.borderBottom = '1px solid #ccc';
+        li.className = 'leaderboard-entry';
+        if (index === 0) li.classList.add('gold');
+        else if (index === 1) li.classList.add('silver');
+        else if (index === 2) li.classList.add('bronze');
+        
         const userDisplay = entry.profiles?.username || 'Anonymous';
-        li.innerHTML = `<strong>${index + 1}.</strong> ${formatTime(entry.time_ms)} - ${userDisplay} <small>(${new Date(entry.created_at).toLocaleDateString()})</small>`;
+        li.innerHTML = `
+            <div class="user-info">
+                <strong>${index + 1}.</strong> 
+                <span class="username">${userDisplay}</span>
+            </div>
+            <div class="time">${formatTime(entry.time_ms)}</div>
+        `;
         leaderboardList.appendChild(li);
     });
 }
