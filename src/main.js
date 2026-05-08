@@ -25,6 +25,12 @@ const authSubmitBtn = document.getElementById('authSubmitBtn');
 const authToggle = document.getElementById('authToggle');
 const closeAuthBtn = document.getElementById('closeAuthBtn');
 const authError = document.getElementById('authError');
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const menuDropdown = document.getElementById('menuDropdown');
+const statsBtn = document.getElementById('statsBtn');
+const statsPopup = document.getElementById('statsPopup');
+const closeStatsBtn = document.getElementById('closeStatsBtn');
+const statsContainer = document.getElementById('statsContainer');
 
 // Supabase setup
 const supabaseUrl = 'https://umocrvwffkxiusdxsgjs.supabase.co';
@@ -272,6 +278,11 @@ leaderboardBtn.addEventListener('click', () => {
     closeHamburgerMenu();
 });
 closeLeaderboardBtn.addEventListener('click', hideLeaderboard);
+statsBtn.addEventListener('click', () => {
+    showStats();
+    closeHamburgerMenu();
+});
+closeStatsBtn.addEventListener('click', hideStats);
 signInBtn.addEventListener('click', () => {
     showAuthPopup(false);
     closeHamburgerMenu();
@@ -283,6 +294,43 @@ signOutBtn.addEventListener('click', () => {
 authForm.addEventListener('submit', handleAuthSubmit);
 authToggle.addEventListener('click', () => showAuthPopup(!isSignUp));
 closeAuthBtn.addEventListener('click', hideAuthPopup);
+
+// Hamburger menu functionality
+hamburgerBtn.addEventListener('click', toggleHamburgerMenu);
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!hamburgerBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+        closeHamburgerMenu();
+    }
+});
+
+function toggleHamburgerMenu() {
+    const isOpen = menuDropdown.classList.contains('show');
+    if (isOpen) {
+        closeHamburgerMenu();
+    } else {
+        openHamburgerMenu();
+    }
+}
+
+function openHamburgerMenu() {
+    menuDropdown.style.display = 'flex';
+    // Trigger reflow
+    void menuDropdown.offsetWidth;
+    menuDropdown.classList.add('show');
+    hamburgerBtn.classList.add('active');
+}
+
+function closeHamburgerMenu() {
+    menuDropdown.classList.remove('show');
+    hamburgerBtn.classList.remove('active');
+    setTimeout(() => {
+        if (!menuDropdown.classList.contains('show')) {
+            menuDropdown.style.display = 'none';
+        }
+    }, 300);
+}
 
 function showLeaderboard() {
     fetchLeaderboard();
@@ -298,46 +346,93 @@ function hideLeaderboard() {
     }, 300);
 }
 
+function showStats() {
+    fetchStats();
+    statsPopup.style.display = 'flex';
+    void statsPopup.offsetWidth;
+    statsPopup.classList.add('show');
+}
+
+function hideStats() {
+    statsPopup.classList.remove('show');
+    setTimeout(() => {
+        statsPopup.style.display = 'none';
+    }, 300);
+}
+
+async function fetchStats() {
+    if (!supabase) {
+        statsContainer.innerHTML = '<p>Statistics unavailable</p>';
+        return;
+    }
+    
+    try {
+        const { count, error: countError } = await supabase
+            .from('leaderboard')
+            .select('*', { count: 'exact', head: true });
+
+        const { count: profilesCount, error: profilesError } = await supabase
+            .from('profiles') 
+            .select('*', { count: 'exact', head: true });
+
+        if (countError || profilesError) {
+            throw new Error('Error fetching data');
+        }
+
+        // Stats calculation
+        let totalPlayers = profilesCount || 0;
+        let gamesPlayed = count || 0;
+        let totalBurgers = gamesPlayed * 5;
+        let totalCost = totalBurgers * 8.70;
+        let roundedCost = totalCost.toFixed(2);
+        let totalGigaCalories = totalBurgers * 621 / 1000000;
+        let totalCows = totalBurgers * 9 / 20000;
+        let roundedCows = totalCows.toFixed(2);
+        let wheatGrains = totalBurgers * 2750;
+        
+        statsContainer.innerHTML = `
+            <div class="leaderboard-entry silver" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="username" style="font-size: 0.9em; color: #666;">Total Players</span>
+                <span class="time" style="font-size: 1.2em; width: 100%; text-align: right;">${totalPlayers.toLocaleString()}</span>
+            </div>
+            <div class="leaderboard-entry silver" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="username" style="font-size: 0.9em; color: #666;">Games Played</span>
+                <span class="time" style="font-size: 1.2em; width: 100%; text-align: right;">${gamesPlayed.toLocaleString()}</span>
+            </div>
+            <div class="leaderboard-entry silver" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="username" style="font-size: 0.9em; color: #666;">Total Burgers Fed</span>
+                <span class="time" style="font-size: 1.2em; width: 100%; text-align: right;">${totalBurgers.toLocaleString()}</span>
+            </div>
+            <div class="leaderboard-entry silver" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="username" style="font-size: 0.9em; color: #666;">Gigacalories Consumed</span>
+                <span class="time" style="font-size: 1.2em; width: 100%; text-align: right;">${totalGigaCalories.toFixed(2)}</span>
+            </div>
+            <div class="leaderboard-entry silver" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="username" style="font-size: 0.9em; color: #666;">Cows Slaughtered</span>
+                <span class="time" style="font-size: 1.2em; width: 100%; text-align: right;">${roundedCows.toLocaleString()}</span>
+            </div>
+            <div class="leaderboard-entry silver" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="username" style="font-size: 0.9em; color: #666;">Cost to Buy Big Macs</span>
+                <span class="time" style="font-size: 1.2em; width: 100%; text-align: right;">$${roundedCost.toLocaleString()}</span>
+            </div>
+            <div class="leaderboard-entry silver" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <span class="username" style="font-size: 0.9em; color: #666;">Wheat Grains Used</span>
+                <span class="time" style="font-size: 1.2em; width: 100%; text-align: right;">${wheatGrains.toLocaleString()}</span>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error fetching statistics:', error);
+        statsContainer.innerHTML = '<p>Error loading statistics</p>';
+    }
+}
+
 async function fetchLeaderboard() {
     if (!supabase) {
         leaderboardList.innerHTML = '<p>Leaderboard unavailable</p>';
         return;
     }
     
-    const { count, error: countError } = await supabase
-        .from('leaderboard')
-        .select('*', { count: 'exact', head: true });
-
-    const { profilesCount, error: profilesError } = await supabase
-        .from('profiles') 
-        .select('*', { count: 'exact', head: true });
-
-        //Stats
-        let totalPlayers = profilesCount;
-        let gamesPlayed = count;
-        let totalCost = count * 5 * 8.70;
-        let roundedCost = totalCost.toFixed(2);
-        let totalBurgers = count * 5;
-        let totalGigaCalories = totalBurgers * 621 / 1000000;
-        let totalCows = totalBurgers * 9 / 20000;
-        let roundedCows = totalCows.toFixed(2);
-        let tonnesOfBurgers = totalBurgers * 233 / 1000000;
-        let grainsOfWheat = totalBurgers * 1600;
-        let megalitersOfWater = totalBurgers * 275 / 100000;
-
-
-        
-
-    const totalGamesPlayedSpan = document.getElementById('totalGamesPlayed');
-    if (totalGamesPlayedSpan) {
-        if (!countError) {
-                totalGamesPlayedSpan.textContent = `(${totalBurgers} Burgers Fed,  ${totalGigaCalories.toFixed(2)} Gigacalories Consumed, ${roundedCows} Cows Slaughtered, $${roundedCost} Cost to Buy Big Macs)`;
-        } else {
-            totalGamesPlayedSpan.textContent = ''
-        }
-    }
-
-    const { data, error } = await supabase
+        const { data, error } = await supabase
         .from('leaderboard')
         .select(`
             time_ms,

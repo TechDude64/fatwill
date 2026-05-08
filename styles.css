@@ -96,50 +96,91 @@ button:focus {
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
 }
 
-#authStatus {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #ffffff;
-    font-size: 14px;
-    padding: 10px 16px;
-    border-radius: 999px;
-    background: rgba(12, 20, 45, 0.72);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-}
-
-#authStatus button {
-    margin-left: 8px;
-    padding: 8px 12px;
-    font-size: 13px;
-    background: rgba(255, 255, 255, 0.18);
-    color: #111;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 999px;
-}
-
-#authStatus button:hover {
-    background: rgba(255, 255, 255, 0.28);
-}
-
-#leaderboardBtn {
+#hamburgerMenu {
     position: absolute;
     top: 20px;
     left: 20px;
-    padding: 10px 18px;
-    font-size: 15px;
-    color: #fff;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+    z-index: 5;
 }
 
-#leaderboardBtn:hover {
-    background: rgba(255, 255, 255, 0.25);
+#hamburgerBtn {
+    background: rgba(12, 20, 45, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: white;
+    font-size: 24px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
 }
 
-#leaderboardBtn:hover {
-    background: rgba(255, 255, 255, 0.25);
+#hamburgerBtn:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+#menuDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+    background: rgba(12, 20, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 16px;
+    min-width: 200px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#menuDropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+#menuDropdown #authStatus {
+    position: static;
+    transform: none;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+#menuDropdown button,
+#menuDropdown a {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+#menuDropdown button:hover,
+#menuDropdown a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+#leaderboardBtn {
+    position: static;
+    box-shadow: none;
 }
 
 .popup-overlay {
