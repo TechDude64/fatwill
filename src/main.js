@@ -31,6 +31,9 @@ const statsBtn = document.getElementById('statsBtn');
 const statsPopup = document.getElementById('statsPopup');
 const closeStatsBtn = document.getElementById('closeStatsBtn');
 const statsContainer = document.getElementById('statsContainer');
+const sponsorsBtn = document.getElementById('sponsorsBtn');
+const sponsorsPopup = document.getElementById('sponsorsPopup');
+const closeSponsorsBtn = document.getElementById('closeSponsorsBtn');
 
 // Supabase setup
 const supabaseUrl = 'https://umocrvwffkxiusdxsgjs.supabase.co';
@@ -283,6 +286,11 @@ statsBtn.addEventListener('click', () => {
     closeHamburgerMenu();
 });
 closeStatsBtn.addEventListener('click', hideStats);
+sponsorsBtn.addEventListener('click', () => {
+    showSponsors();
+    closeHamburgerMenu();
+});
+closeSponsorsBtn.addEventListener('click', hideSponsors);
 signInBtn.addEventListener('click', () => {
     showAuthPopup(false);
     closeHamburgerMenu();
@@ -357,6 +365,19 @@ function hideStats() {
     statsPopup.classList.remove('show');
     setTimeout(() => {
         statsPopup.style.display = 'none';
+    }, 300);
+}
+
+function showSponsors() {
+    sponsorsPopup.style.display = 'flex';
+    void sponsorsPopup.offsetWidth;
+    sponsorsPopup.classList.add('show');
+}
+
+function hideSponsors() {
+    sponsorsPopup.classList.remove('show');
+    setTimeout(() => {
+        sponsorsPopup.style.display = 'none';
     }, 300);
 }
 

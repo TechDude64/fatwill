@@ -15,7 +15,7 @@
         </div>
     </div>
         <div id="timerDisplay" style="position:absolute;top:20px;right:20px;color:white;font-family:monospace;font-size:32px;font-weight:bold;z-index:4;text-shadow: 2px 2px 4px rgba(0,0,0,1);">00:00.000</div>
-        <div id="hamburgerMenu">
+                <div id="hamburgerMenu">
         <button id="hamburgerBtn">☰</button>
         <div id="menuDropdown" style="display: none;">
             <div id="authStatus">
@@ -25,6 +25,7 @@
             <button id="signOutBtn" style="display:none;">Sign Out</button>
             <button id="leaderboardBtn">Leaderboard</button>
             <button id="statsBtn">Statistics</button>
+            <button id="sponsorsBtn">Sponsors</button>
         </div>
     </div>
     <img id="burger" src="burger.png" alt="Stretch" style="width:8.5%;height:auto;position:absolute;left:140px;top:20px;z-index:3;cursor:grab;user-drag:none;user-select:none;">
@@ -43,14 +44,28 @@
         </div>
     </div>
         <div id="statsPopup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <h2>Global Statistics</h2>
-            <div id="statsContainer" style="max-height:400px;overflow-y:auto;margin-bottom:20px;text-align:left;">
-                <p>Loading statistics...</p>
+            <div class="popup-content">
+                <h2>Global Statistics</h2>
+                <div id="statsContainer" style="max-height:400px;overflow-y:auto;margin-bottom:20px;text-align:left;">
+                    <p>Loading statistics...</p>
+                </div>
+                <button id="closeStatsBtn">Close</button>
             </div>
-            <button id="closeStatsBtn">Close</button>
         </div>
-    </div>
+        <div id="sponsorsPopup" class="popup-overlay" style="display: none;">
+            <div class="popup-content">
+                <h2>Our Sponsors</h2>
+                <div id="sponsorsContainer" style="max-height:400px;overflow-y:auto;margin-bottom:20px;text-align:left;">
+                    <ul>
+                        <li><a href="https://awesomeadi.com" target="_blank">Awesome Adi</a></li>
+                        <li><a href="https://slope4.vercel.app" target="_blank">Slope 4</a></li>
+                        <li><a href="https://benstinks.vercel.app" target="_blank">Ben Stinks</a></li>
+                        <li>More coming soon...</li>
+                    </ul>
+                </div>
+                <button id="closeSponsorsBtn">Close</button>
+            </div>
+        </div>
     <div id="authPopup" class="popup-overlay" style="display: none;">
         <div class="popup-content">
             <h2 id="authTitle">Sign In</h2>

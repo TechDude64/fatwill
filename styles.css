@@ -273,7 +273,58 @@ button:focus {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-#leaderboardList .leaderboard-entry:hover {
+#statsContainer, #sponsorsContainer {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: rgba(245, 245, 245, 0.9);
+    border-radius: 12px;
+    text-align: left;
+}
+
+#statsContainer .leaderboard-entry,
+#sponsorsContainer ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#sponsorsContainer ul {
+    flex-direction: column;
+    align-items: flex-start;
+    list-style-type: none;
+    padding: 16px;
+}
+
+#sponsorsContainer li {
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+#sponsorsContainer li:last-child {
+    margin-bottom: 0;
+}
+
+#sponsorsContainer a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+#sponsorsContainer a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+#leaderboardList .leaderboard-entry:hover,
+#statsContainer .leaderboard-entry:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
