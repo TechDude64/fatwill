@@ -278,13 +278,15 @@ button:focus {
     overflow-y: auto;
     margin-bottom: 20px;
     padding: 12px;
-    background: rgba(245, 245, 245, 0.9);
     border-radius: 12px;
     text-align: left;
 }
 
-#statsContainer .leaderboard-entry,
-#sponsorsContainer ul {
+#statsContainer {
+    background: rgba(245, 245, 245, 0.9);
+}
+
+#statsContainer .leaderboard-entry {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -298,14 +300,16 @@ button:focus {
 
 #sponsorsContainer ul {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     list-style-type: none;
-    padding: 16px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 #sponsorsContainer li {
     margin-bottom: 12px;
-    font-size: 1.1rem;
 }
 
 #sponsorsContainer li:last-child {
@@ -313,14 +317,24 @@ button:focus {
 }
 
 #sponsorsContainer a {
-    color: #007bff;
+    display: block;
+    padding: 16px 20px;
+    background: white;
+    color: #333;
     text-decoration: none;
     font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 #sponsorsContainer a:hover {
-    text-decoration: underline;
-    color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    color: #ff5722;
+    border-color: rgba(255, 87, 34, 0.2);
 }
 
 #leaderboardList .leaderboard-entry:hover,
